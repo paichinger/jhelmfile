@@ -106,7 +106,7 @@
 		</repository>
 	</distributionManagement>
 	<scm>
-		<connection>scm:git:git@github.com/paichinger/jhelmfile.git</connection>
+		<connection>scm:git:git://github.com/paichinger/jhelmfile.git</connection>
 		<developerConnection>scm:git:git@github.com/paichinger/jhelmfile.git</developerConnection>
 		<url>https://github.com/paichinger/jhelmfile</url>
 	</scm>
