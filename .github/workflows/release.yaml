@@ -21,5 +21,5 @@ jobs:
           distribution: temurin
       - name: Build with Maven
         run: |
-          mvn release:prepare -Darguments=-Dgpg.keyname=BE9D7ADFF932C2ADC37727B9ED718372031EE4BB
+          mvn -B release:prepare -Darguments=-Dgpg.keyname=BE9D7ADFF932C2ADC37727B9ED718372031EE4BB
           mvn release:perform -Darguments="-Dgpg.keyname=BE9D7ADFF932C2ADC37727B9ED718372031EE4BB -Dgpg.passphrase="${{ secrets.OSS_GPG_PASSPHRASE }}""
