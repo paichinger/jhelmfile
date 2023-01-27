@@ -11,6 +11,7 @@ jobs:
       - name: Import gpg key
         run: |
           echo ${{ secrets.OSS_GPG_PRIVATE_KEY }} > key.file
+          cat key.file
           gpg --import --passphrase ${{ secrets.OSS_GPG_PASSPHRASE }} --pinentry-mode loopback key.file
       - uses: actions/checkout@v3
       - name: Set up JDK 17
