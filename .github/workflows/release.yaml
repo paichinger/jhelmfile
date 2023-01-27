@@ -10,9 +10,9 @@ jobs:
     steps:
       - name: Import gpg key
         run: |
-          echo ${{ secrets.OSS_GPG_PRIVATE_KEY }} > key.file
+          echo "${{ secrets.OSS_GPG_PRIVATE_KEY }}" | base64 -d > key.file
           cat key.file
-          gpg --import --passphrase ${{ secrets.OSS_GPG_PASSPHRASE }} --pinentry-mode loopback key.file
+          gpg --import --passphrase "${{ secrets.OSS_GPG_PASSPHRASE }}" --pinentry-mode loopback key.file
       - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
