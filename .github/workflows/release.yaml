@@ -11,8 +11,8 @@ jobs:
       - name: Import gpg key
         run: |
           echo "${{ secrets.OSS_GPG_PRIVATE_KEY }}" | base64 -d > key.file
-          cat key.file
-          gpg --import --passphrase "${{ secrets.OSS_GPG_PASSPHRASE }}" --pinentry-mode loopback key.file
+          gpg --batch --import key.file
+          rm -f key.file
       - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -21,5 +21,6 @@ jobs:
           distribution: temurin
       - name: Build with Maven
         run: |
-          mvn -B release:prepare -Darguments=-Dgpg.keyname=BE9D7ADFF932C2ADC37727B9ED718372031EE4BB
-          mvn -B release:perform -Darguments="-Dgpg.keyname=BE9D7ADFF932C2ADC37727B9ED718372031EE4BB -Dgpg.passphrase="${{ secrets.OSS_GPG_PASSPHRASE }}""
+          echo "${{ secrets.MAVEN_SETTINGS }}" | base64 -d > settings.xml
+          mvn -B --setings settings.xml --no-transfer-progress release:prepare -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C
+          mvn -B --setings settings.xml --no-transfer-progress release:perform -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C
