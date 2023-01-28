@@ -15,6 +15,7 @@ jobs:
           rm -f key.file
       - uses: actions/checkout@v3
         with:
+          ref: main
           fetch-depth: 0
       - name: Set up JDK 17
         uses: actions/setup-java@v3
