@@ -24,7 +24,7 @@ jobs:
           distribution: temurin
       - name: Build with Maven
         with:
-          token: ${{ secrets.GITHUB_PAT }}
+          token: ${{ secrets.PAT }}
         run: |
           git config --global user.email "p.aichinger@googlemail.com"
           git config --global user.name "paichinger"
