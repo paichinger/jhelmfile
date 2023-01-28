@@ -22,5 +22,5 @@ jobs:
       - name: Build with Maven
         run: |
           echo "${{ secrets.MAVEN_SETTINGS }}" | base64 -d > settings.xml
-          mvn -B --setings settings.xml --no-transfer-progress release:prepare -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C
-          mvn -B --setings settings.xml --no-transfer-progress release:perform -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C
+          mvn -B --settings settings.xml --no-transfer-progress release:prepare -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C
+          mvn -B --settings settings.xml --no-transfer-progress release:perform -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C
