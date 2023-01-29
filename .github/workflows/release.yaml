@@ -17,14 +17,13 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.PAT }}
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: "17"
           distribution: temurin
       - name: Build with Maven
-        with:
-          token: ${{ secrets.PAT }}
         run: |
           git config --global user.email "p.aichinger@googlemail.com"
           git config --global user.name "paichinger"
