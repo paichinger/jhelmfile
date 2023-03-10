@@ -3,7 +3,7 @@ name: Build and deploy maven artifacts
 on:
   push:
     tags:
-      - trigger-release
+      - 'release-[0-9]+.[0-9]+'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,8 +26,9 @@ jobs:
       - name: Build with Maven
         run: |
           git config --global user.email "p.aichinger@googlemail.com"
-          git config --global user.name "paichinger"
+          git config --global user.name "releasebot"
           echo "${{ secrets.MAVEN_SETTINGS }}" | base64 -d > settings.xml
-          cat settings.xml
-          mvn -B --settings settings.xml --no-transfer-progress release:prepare -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C
+          NEW_VERSION=$(echo $GITHUB_REF_NAME | cut -c 9-)
+          echo "Preparing release version: $NEW_VERSION"
+          mvn -B --settings settings.xml --no-transfer-progress release:prepare -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C -DreleaseVersion=$NEW_VERSION
           mvn -B --settings settings.xml --no-transfer-progress release:perform -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C

@@ -1,1 +1,0 @@
-package com.paichinger.helmfile.commands;import lombok.Builder;import lombok.Getter;@Builder@Getterpublic class Configuration {	@Builder.Default private final String workdir = ".";	@Builder.Default private final String helmfileBinaryPath = "helmfile";}
