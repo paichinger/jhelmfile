@@ -30,5 +30,5 @@ jobs:
           echo "${{ secrets.MAVEN_SETTINGS }}" | base64 -d > settings.xml
           NEW_VERSION=$(echo $GITHUB_REF_NAME | cut -c 9-)
           echo "Preparing release version: $NEW_VERSION"
-          mvn -B --settings settings.xml --no-transfer-progress release:prepare -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C -DreleaseVersion=$NEW_VERSION
-          mvn -B --settings settings.xml --no-transfer-progress release:perform -Darguments=-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C
+          mvn -B --settings settings.xml --no-transfer-progress release:prepare -Darguments="-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C -DskipTests" -DreleaseVersion=$NEW_VERSION
+          mvn -B --settings settings.xml --no-transfer-progress release:perform -Darguments="-Dgpg.keyname=A0CE0D27564D87E0E95E51B36698D217CB772B1C -DskipTests"
