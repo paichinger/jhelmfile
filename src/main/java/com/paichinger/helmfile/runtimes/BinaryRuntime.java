@@ -23,14 +23,14 @@ import com.paichinger.helmfile.exceptions.CommandLineException;
 import com.paichinger.helmfile.utils.OperatingSystem;
 
 @Slf4j
-public class CommandLineRuntime extends Runtime {
-	public CommandLineRuntime(String helmfileBinaryPath, String workDir) {
+public class BinaryRuntime extends Runtime {
+	public BinaryRuntime(String helmfileBinaryPath, String workDir) {
 		super(helmfileBinaryPath);
 	}
 	
 	@Builder
-	public static CommandLineRuntime create(String helmfileBinaryPath, String workDir) {
-		return new CommandLineRuntime(helmfileBinaryPath, workDir);
+	public static BinaryRuntime create(String helmfileBinaryPath, String workDir) {
+		return new BinaryRuntime(helmfileBinaryPath, workDir);
 	}
 	
 	@Override

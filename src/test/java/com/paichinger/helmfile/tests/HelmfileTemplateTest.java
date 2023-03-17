@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.paichinger.helmfile.commands.TemplateCommand;
 import com.paichinger.helmfile.models.template.HelmfileTemplate;
-import com.paichinger.helmfile.runtimes.CommandLineRuntime;
+import com.paichinger.helmfile.runtimes.BinaryRuntime;
 import com.paichinger.helmfile.runtimes.DockerRuntime;
 
 public class HelmfileTemplateTest {
@@ -21,7 +21,7 @@ public class HelmfileTemplateTest {
 	@DisplayName("Test templating with locally installed helmfile.")
 	void testInstalledHelmfile() {
 		File helmfileYaml = new File(this.getClass().getResource("/helmfiles/helmfile.yaml").getFile());
-		CommandLineRuntime runtime = CommandLineRuntime.builder().helmfileBinaryPath("helmfile").build();
+		BinaryRuntime runtime = BinaryRuntime.builder().helmfileBinaryPath("helmfile").build();
 		TemplateCommand command = TemplateCommand.builder()
 				.helmfileYaml(helmfileYaml)
 				.skipDeps(true)
@@ -35,7 +35,13 @@ public class HelmfileTemplateTest {
 	@DisplayName("Test templating with docker-helmfile.")
 	void testDockerHelmfile() {
 		File helmfileYaml = new File(this.getClass().getResource("/helmfiles/helmfile.yaml").getFile());
-		DockerRuntime runtime = DockerRuntime.builder().helmfileBinaryPath("helmfile").build();
+		DockerRuntime runtime = DockerRuntime
+				.builder()
+				.dockerHost("unix:///var/run/docker.sock")
+				.imageRepository("ghcr.io/helmfile/helmfile")
+				.imageTag("v0.151.0")
+				.helmfileBinaryPath("helmfile")
+				.build();
 		TemplateCommand command = TemplateCommand.builder()
 				.helmfileYaml(helmfileYaml)
 				.build();

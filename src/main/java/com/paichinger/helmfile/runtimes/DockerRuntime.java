@@ -33,12 +33,12 @@ import com.paichinger.helmfile.utils.OperatingSystem;
 @Slf4j
 public class DockerRuntime extends Runtime {
 	private static final String DEFAULT_IMAGE_REPOSITORY = "ghcr.io/helmfile/helmfile";
-	private static final String DEFAULT_IMAGE_TAG = "v0.150.0";
+	private static final String DEFAULT_IMAGE_TAG = "v0.150.1";
 	private final String imageRepository;
 	private final String imageTag;
 	private final String dockerHost;
 	
-	public DockerRuntime(String helmfileBinaryPath, String workDir, String dockerHost, String imageRepository, String imageTag) {
+	public DockerRuntime(String helmfileBinaryPath, String dockerHost, String imageRepository, String imageTag) {
 		super(helmfileBinaryPath);
 		this.dockerHost = dockerHost;
 		this.imageRepository = imageRepository;
@@ -46,11 +46,11 @@ public class DockerRuntime extends Runtime {
 	}
 	
 	@Builder
-	public static DockerRuntime create(String helmfileBinaryPath, String workDir, String dockerHost, String imageRepository, String imageTag) {
+	public static DockerRuntime create(String helmfileBinaryPath, String dockerHost, String imageRepository, String imageTag) {
 		String nonNullDockerHost = isNotEmpty(dockerHost) ? dockerHost : getDefaultDockerHost();
 		String nonNullImageRepository = isNotEmpty(imageRepository) ? imageRepository : DEFAULT_IMAGE_REPOSITORY;
 		String nonNullImageTag = isNotEmpty(imageTag) ? imageTag : DEFAULT_IMAGE_TAG;
-		return new DockerRuntime(helmfileBinaryPath, workDir, nonNullDockerHost, nonNullImageRepository, nonNullImageTag);
+		return new DockerRuntime(helmfileBinaryPath, nonNullDockerHost, nonNullImageRepository, nonNullImageTag);
 	}
 	
 	@Override
