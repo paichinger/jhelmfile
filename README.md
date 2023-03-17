@@ -5,7 +5,20 @@ jhelmfile is a java library which can be used to run the [helmfile](https://gith
 It offers a convenient API to create and execute helmfile commands like `build` and `template`. 
 The commands can be executed using a runtime which can be whether a locally installed helmfile binary or a docker image containing helmfile. 
 The output of helmfile is mapped to java objects which can then be used for further processing. 
-For example, you could run verfications against them, as you can see in the example project which uses jhelmfile to test a helmfile using junit.
+For example, you could run verifications against them, as you can see in the example project which uses jhelmfile to test a helmfile using junit.
+## Usage
+### Maven
+```xml
+<dependency>
+    <groupId>io.github.paichinger</groupId>
+    <artifactId>jhelmfile</artifactId>
+    <version>1.7</version>
+</dependency>
+```
+### Gradle
+```groovy
+implementation 'io.github.paichinger:jhelmfile:1.7'
+```
 ## Commands
 For each supported helmfile command (`build` and `template`) you can find a builder. See here:
 ### build
