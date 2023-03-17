@@ -12,12 +12,12 @@ For example, you could run verifications against them, as you can see in the [ex
 <dependency>
     <groupId>io.github.paichinger</groupId>
     <artifactId>jhelmfile</artifactId>
-    <version>1.7</version>
+    <version>1.8</version>
 </dependency>
 ```
 ### Gradle
 ```groovy
-implementation 'io.github.paichinger:jhelmfile:1.7'
+implementation 'io.github.paichinger:jhelmfile:1.8'
 ```
 ## Commands
 For each supported helmfile command (`build` and `template`) you can find a builder. See here:
@@ -66,7 +66,7 @@ The above commands can be executed using one of the available runtimes:
 ### Binary Runtime
 This runtime can be used if you have the helmfile binary available on your machine. Usage:
 ```java
-CommandLineRuntime runtime = CommandLineRuntime
+BinaryRuntime runtime = BinaryRuntime
   .builder()
   .helmfileBinaryPath("/bin/helmfile")
   .build();
