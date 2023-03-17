@@ -5,6 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
+import java.io.File;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,9 +20,10 @@ public class HelmfileTemplateTest {
 	@Test
 	@DisplayName("Test templating with locally installed helmfile.")
 	void testInstalledHelmfile() {
-		String helmfileDirectory = this.getClass().getResource("/helmfiles").getPath();
-		CommandLineRuntime runtime = CommandLineRuntime.builder().helmfileBinaryPath("helmfile").workDir(helmfileDirectory).build();
+		File helmfileYaml = new File(this.getClass().getResource("/helmfiles/helmfile.yaml").getFile());
+		CommandLineRuntime runtime = CommandLineRuntime.builder().helmfileBinaryPath("helmfile").build();
 		TemplateCommand command = TemplateCommand.builder()
+				.helmfileYaml(helmfileYaml)
 				.skipDeps(true)
 				.build();
 		HelmfileTemplate result = runtime.template(command);
@@ -31,9 +34,10 @@ public class HelmfileTemplateTest {
 	@Test
 	@DisplayName("Test templating with docker-helmfile.")
 	void testDockerHelmfile() {
-		String helmfileDirectory = this.getClass().getResource("/helmfiles").getPath();
-		DockerRuntime runtime = DockerRuntime.builder().helmfileBinaryPath("helmfile").workDir(helmfileDirectory).build();
+		File helmfileYaml = new File(this.getClass().getResource("/helmfiles/helmfile.yaml").getFile());
+		DockerRuntime runtime = DockerRuntime.builder().helmfileBinaryPath("helmfile").build();
 		TemplateCommand command = TemplateCommand.builder()
+				.helmfileYaml(helmfileYaml)
 				.build();
 		HelmfileTemplate result = runtime.template(command);
 		assertThat(result.deployments().get(0).getMetadata().getName(), equalTo("prom-norbac-ubuntu-kube-state-metrics"));

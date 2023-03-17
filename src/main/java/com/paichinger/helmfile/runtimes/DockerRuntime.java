@@ -27,18 +27,19 @@ import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.transport.DockerHttpClient;
 import com.github.dockerjava.zerodep.ZerodepDockerHttpClient;
 
-import utils.OperatingSystem;
+import com.paichinger.helmfile.commands.Command;
+import com.paichinger.helmfile.utils.OperatingSystem;
 
 @Slf4j
 public class DockerRuntime extends Runtime {
-	private static String DEFAULT_IMAGE_REPOSITORY = "ghcr.io/helmfile/helmfile";
-	private static String DEFAULT_IMAGE_TAG = "v0.150.0";
+	private static final String DEFAULT_IMAGE_REPOSITORY = "ghcr.io/helmfile/helmfile";
+	private static final String DEFAULT_IMAGE_TAG = "v0.150.0";
 	private final String imageRepository;
 	private final String imageTag;
 	private final String dockerHost;
 	
 	public DockerRuntime(String helmfileBinaryPath, String workDir, String dockerHost, String imageRepository, String imageTag) {
-		super(helmfileBinaryPath, workDir);
+		super(helmfileBinaryPath);
 		this.dockerHost = dockerHost;
 		this.imageRepository = imageRepository;
 		this.imageTag = imageTag;
@@ -53,19 +54,18 @@ public class DockerRuntime extends Runtime {
 	}
 	
 	@Override
-	String run(String command, String workDir) {
+	String run(Command command) {
 		DockerClient dockerClient = createDockerClient();
 		pullDockerImage(dockerClient);
-		CreateContainerResponse container = createDockerContainer(command, workDir, dockerClient);
+		CreateContainerResponse container = createDockerContainer(command, dockerClient);
 		dockerClient.startContainerCmd(container.getId()).exec();
 		ByteArrayOutputStream logStream = collectContainerLogs(dockerClient, container);
 		dockerClient.removeContainerCmd(container.getId());
-		return new String(logStream.toByteArray());
+		return logStream.toString();
 	}
 	
 	@NotNull
 	private static ByteArrayOutputStream collectContainerLogs(DockerClient dockerClient, CreateContainerResponse container) {
-		List<String> logs = new ArrayList<>();
 		ByteArrayOutputStream logStream = new ByteArrayOutputStream();
 		LogContainerCmd logContainerCmd = dockerClient.logContainerCmd(container.getId());
 		logContainerCmd.withStdOut(true).withStdErr(true).withTail(100).withFollowStream(true);
@@ -74,7 +74,6 @@ public class DockerRuntime extends Runtime {
 			logContainerCmd.exec(new LogContainerResultCallback() {
 				@Override
 				public void onNext(Frame item) {
-					logs.add(new String(item.getPayload()));
 					try {
 						logStream.write(item.getPayload());
 					}
@@ -90,19 +89,18 @@ public class DockerRuntime extends Runtime {
 		return logStream;
 	}
 	
-	private CreateContainerResponse createDockerContainer(String command, String workDir, DockerClient dockerClient) {
-		CreateContainerResponse container = dockerClient.createContainerCmd(String.format("%s:%s", imageRepository, imageTag))
+	private CreateContainerResponse createDockerContainer(Command command, DockerClient dockerClient) {
+		return dockerClient.createContainerCmd(String.format("%s:%s", imageRepository, imageTag))
 				.withHostConfig(HostConfig.newHostConfig()
 						.withNetworkMode("host")
 						.withBinds(List.of(
 								Bind.parse(System.getenv("HOME") + "/.kube:/root/.kube"),
 								Bind.parse(System.getenv("HOME") + "/.config/helm:/root/.config/helm"),
-								Bind.parse(workDir + ":/wd"))))
+								Bind.parse(command.getHelmfileYaml().getParent() + ":/wd"))))
 				.withWorkingDir("/wd")
-				.withCmd(command.split(" "))
+				.withCmd(command.generateCommandString(helmfileBinaryPath).split(" "))
 				.withTty(true)
 				.exec();
-		return container;
 	}
 	
 	private void pullDockerImage(DockerClient dockerClient) {
@@ -119,15 +117,14 @@ public class DockerRuntime extends Runtime {
 	
 	private DockerClient createDockerClient() {
 		DockerClientConfig dockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
-		DockerHttpClient dockerHttpClient = null;
+		DockerHttpClient dockerHttpClient;
 		try {
 			dockerHttpClient = new ZerodepDockerHttpClient.Builder().dockerHost(new URI(dockerHost)).build();
 		}
 		catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
-		DockerClient dockerClient = DockerClientImpl.getInstance(dockerClientConfig, dockerHttpClient);
-		return dockerClient;
+		return DockerClientImpl.getInstance(dockerClientConfig, dockerHttpClient);
 	}
 	
 	private static boolean isNotEmpty(String s) {
@@ -135,14 +132,10 @@ public class DockerRuntime extends Runtime {
 	}
 	
 	private static String getDefaultDockerHost() {
-		switch (OperatingSystem.getOS()) {
-			case LINUX:
-				return "unix:///var/run/docker.sock";
-			case MAC:
-			case WINDOWS:
-				return "tcp://localhost:2376";
-			default:
-				throw new UnsupportedOperationException("No supported OS detected.");
-		}
+		return switch (OperatingSystem.getOS()) {
+			case LINUX -> "unix:///var/run/docker.sock";
+			case MAC, WINDOWS -> "tcp://localhost:2376";
+			default -> throw new UnsupportedOperationException("No supported OS detected.");
+		};
 	}
 }

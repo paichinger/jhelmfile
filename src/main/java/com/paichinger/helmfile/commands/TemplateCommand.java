@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Singular;
 
 @Builder
@@ -21,6 +22,7 @@ public class TemplateCommand implements Command {
 	private final boolean skipDeps;
 	private final boolean skipNeeds;
 	private final boolean includeTransitiveNeeds;
+	@Getter private final File helmfileYaml;
 	@Builder.Default private final String logLevel = "ERROR";
 	
 	@Override
@@ -33,7 +35,7 @@ public class TemplateCommand implements Command {
 	}
 	
 	private List<String> generateHelmfileCommandLineParameters() {
-		List<String> parameters = UTILS.processBasicParameters(stateValuesSet, stateValuesFiles, environment);
+		List<String> parameters = UTILS.processBasicParameters(stateValuesSet, stateValuesFiles, environment, helmfileYaml.getName());
 		if (selectors != null && !selectors.isEmpty()) {
 			String selectorParameters = Optional
 					.of(selectors)

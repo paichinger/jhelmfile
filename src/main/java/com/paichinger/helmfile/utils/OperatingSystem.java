@@ -1,4 +1,4 @@
-package utils;
+package com.paichinger.helmfile.utils;
 
 public class OperatingSystem {
 	public enum OS {

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 class CommandUtils {
 	
-	List<String> processBasicParameters(Map<String, String> stateValuesSet, List<File> stateValuesFiles, String environment) {
+	List<String> processBasicParameters(Map<String, String> stateValuesSet, List<File> stateValuesFiles, String environment, String helmfileYaml) {
 		List<String> parameters = new ArrayList<>();
 		if (stateValuesSet != null && !stateValuesSet.isEmpty()) {
 			parameters.add(Optional
@@ -30,6 +30,7 @@ class CommandUtils {
 					.collect(Collectors.joining(" ")));
 		}
 		parameters.add(environment != null && environment.length() > 0 ? "-e " + environment : "");
+		parameters.add("-f " + helmfileYaml);
 		return parameters;
 	}
 	

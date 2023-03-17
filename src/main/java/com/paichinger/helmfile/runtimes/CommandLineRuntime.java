@@ -1,6 +1,6 @@
 package com.paichinger.helmfile.runtimes;
 
-import static utils.OperatingSystem.OS.WINDOWS;
+import static com.paichinger.helmfile.utils.OperatingSystem.OS.WINDOWS;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,14 +17,15 @@ import java.util.function.Consumer;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
+import com.paichinger.helmfile.commands.Command;
 import com.paichinger.helmfile.exceptions.CommandLineException;
 
-import utils.OperatingSystem;
+import com.paichinger.helmfile.utils.OperatingSystem;
 
 @Slf4j
 public class CommandLineRuntime extends Runtime {
 	public CommandLineRuntime(String helmfileBinaryPath, String workDir) {
-		super(helmfileBinaryPath, workDir);
+		super(helmfileBinaryPath);
 	}
 	
 	@Builder
@@ -33,15 +34,15 @@ public class CommandLineRuntime extends Runtime {
 	}
 	
 	@Override
-	String run(String command, String workdir) {
+	String run(Command command) {
 		ProcessBuilder builder = new ProcessBuilder();
 		if (isWindows()) {
-			builder.command("cmd.exe", "/c", command);
+			builder.command("cmd.exe", "/c", command.generateCommandString(helmfileBinaryPath));
 		}
 		else {
-			builder.command("sh", "-c", command);
+			builder.command("sh", "-c", command.generateCommandString(helmfileBinaryPath));
 		}
-		builder.directory(new File(workdir));
+		builder.directory(new File(command.getHelmfileYaml().getParent()));
 		try {
 			Process process = builder.start();
 			StringBuilder output = new StringBuilder();

@@ -14,6 +14,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paichinger.helmfile.commands.BuildCommand;
+import com.paichinger.helmfile.commands.Command;
 import com.paichinger.helmfile.commands.TemplateCommand;
 import com.paichinger.helmfile.models.build.HelmfileBuild;
 import com.paichinger.helmfile.models.template.HelmfileTemplate;
@@ -31,22 +32,20 @@ import io.kubernetes.client.openapi.models.V1StatefulSet;
 @RequiredArgsConstructor
 abstract class Runtime {
 	
-	private final String helmfileBinaryPath;
-	private final String workDir;
-	
+	protected final String helmfileBinaryPath;
 	public HelmfileBuild build(BuildCommand command) {
 		String helmfileCommand = command.generateCommandString(helmfileBinaryPath);
-		String helmfileBuildOutput = run(helmfileCommand, workDir);
+		String helmfileBuildOutput = run(command);
 		return unmarshallHelmfileBuildOutput(helmfileBuildOutput);
 	}
 	
 	public HelmfileTemplate template(TemplateCommand command) {
 		String helmfileCommand = command.generateCommandString(helmfileBinaryPath);
-		String yamlManifests = run(helmfileCommand, workDir);
+		String yamlManifests = run(command);
 		return unmarshallHelmfileTemplateOutput(yamlManifests);
 	}
 	
-	abstract String run(String command, String workDir);
+	abstract String run(Command command);
 	
 	HelmfileBuild unmarshallHelmfileBuildOutput(String commandLineOutput) {
 		InputStream in = new ByteArrayInputStream(commandLineOutput.getBytes());
@@ -78,11 +77,8 @@ abstract class Runtime {
 			ObjectMapper mapper = new ObjectMapper();
 			//noinspection rawtypes
 			Map manifest = (LinkedHashMap) map;
-			switch ((String) manifest.get("kind")) {
-				case "Service":
-					services.add(mapper.convertValue(manifest, V1Service.class));
-			}
 			if (manifest.get("kind").equals("Service")) {
+				services.add(mapper.convertValue(manifest, V1Service.class));
 			}
 			if (manifest.get("kind").equals("ServiceAccount")) {
 				serviceAccounts.add(mapper.convertValue(manifest, V1ServiceAccount.class));
