@@ -39,7 +39,7 @@ public class HelmfileTemplateTest {
 				.builder()
 				.dockerHost("unix:///var/run/docker.sock")
 				.imageRepository("ghcr.io/helmfile/helmfile")
-				.imageTag("v0.151.0")
+				.imageTag("v0.155.0")
 				.helmfileBinaryPath("helmfile")
 				.build();
 		TemplateCommand command = TemplateCommand.builder()
