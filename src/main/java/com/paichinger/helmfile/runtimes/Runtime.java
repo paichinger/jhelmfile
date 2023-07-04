@@ -8,8 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-
 import org.yaml.snakeyaml.Yaml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,10 +27,18 @@ import io.kubernetes.client.openapi.models.V1Service;
 import io.kubernetes.client.openapi.models.V1ServiceAccount;
 import io.kubernetes.client.openapi.models.V1StatefulSet;
 
-@RequiredArgsConstructor
 abstract class Runtime {
 	
 	protected final String helmfileBinaryPath;
+	
+	public Runtime(String helmfileBinaryPath) {
+		if (helmfileBinaryPath == null || helmfileBinaryPath.isBlank()) {
+			this.helmfileBinaryPath = "helmfile";
+		} else {
+			this.helmfileBinaryPath = helmfileBinaryPath;
+		}
+		
+	}
 	public HelmfileBuild build(BuildCommand command) {
 		String helmfileCommand = command.generateCommandString(helmfileBinaryPath);
 		String helmfileBuildOutput = run(command);
