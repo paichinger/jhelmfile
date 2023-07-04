@@ -40,13 +40,11 @@ abstract class Runtime {
 		
 	}
 	public HelmfileBuild build(BuildCommand command) {
-		String helmfileCommand = command.generateCommandString(helmfileBinaryPath);
 		String helmfileBuildOutput = run(command);
 		return unmarshallHelmfileBuildOutput(helmfileBuildOutput);
 	}
 	
 	public HelmfileTemplate template(TemplateCommand command) {
-		String helmfileCommand = command.generateCommandString(helmfileBinaryPath);
 		String yamlManifests = run(command);
 		return unmarshallHelmfileTemplateOutput(yamlManifests);
 	}
