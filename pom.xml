@@ -3,7 +3,7 @@
 
 	<groupId>io.github.paichinger</groupId>
 	<artifactId>jhelmfile</artifactId>
-	<version>1.9-SNAPSHOT</version>
+	<version>1.9</version>
 	<packaging>jar</packaging>
 
 	<name>jhelmfile</name>
@@ -113,6 +113,6 @@
 		<url>https://github.com/paichinger/jhelmfile</url>
 		<connection>scm:git:https://github.com/paichinger/jhelmfile.git</connection>
 		<developerConnection>scm:git:https://github.com/paichinger/jhelmfile.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>jhelmfile-1.9</tag>
 	</scm>
 </project>
