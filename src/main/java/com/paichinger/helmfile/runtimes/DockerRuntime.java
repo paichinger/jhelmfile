@@ -32,7 +32,7 @@ import com.paichinger.helmfile.utils.OperatingSystem;
 @Slf4j
 public class DockerRuntime extends Runtime {
 	private static final String DEFAULT_IMAGE_REPOSITORY = "ghcr.io/helmfile/helmfile";
-	private static final String DEFAULT_IMAGE_TAG = "v0.151.0";
+	private static final String DEFAULT_IMAGE_TAG = "v0.156.0";
 	private final String imageRepository;
 	private final String imageTag;
 	private final String dockerHost;
