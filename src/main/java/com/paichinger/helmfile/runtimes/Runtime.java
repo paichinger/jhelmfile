@@ -13,6 +13,7 @@ import org.yaml.snakeyaml.Yaml;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paichinger.helmfile.commands.BuildCommand;
 import com.paichinger.helmfile.commands.Command;
+import com.paichinger.helmfile.commands.SyncCommand;
 import com.paichinger.helmfile.commands.TemplateCommand;
 import com.paichinger.helmfile.models.build.HelmfileBuild;
 import com.paichinger.helmfile.models.template.HelmfileTemplate;
@@ -47,6 +48,10 @@ abstract class Runtime {
 	public HelmfileTemplate template(TemplateCommand command) {
 		String yamlManifests = run(command);
 		return unmarshallHelmfileTemplateOutput(yamlManifests);
+	}
+	
+	public String sync(SyncCommand command) {
+		return run(command);
 	}
 	
 	abstract String run(Command command);
