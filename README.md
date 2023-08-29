@@ -118,3 +118,5 @@ HelmfileBuild buildOutput = runtime.build(buildCommand);
 ```
 ### Note
 jhelfmile is doesn't support all the features the helmifle cli offers yet. However, if you're missing a feature or a command don't hesitate to open an issue or create a PR. 
+### Use cases
+In the [examples](https://github.com/paichinger/jhelmfile/tree/main/examples) folder you can find a project which uses jhelmfile to run tests against a helmfile. There, the output of jhelmfile is used to run verifications using junit.
