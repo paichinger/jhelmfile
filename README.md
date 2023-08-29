@@ -107,7 +107,7 @@ DockerRuntime runtime = DockerRuntime
   .build();
 ```
 ### Execution
-The runtimes offer methods to execute the supported operations (`build`,`template`). 
+The runtimes offer methods to execute the supported operations (`build`,`template`,`sync`). 
 Those methods return POJOs representing the corresponding helmfile output ([HelmfileBuild](https://github.com/paichinger/jhelmfile/blob/main/src/main/java/com/paichinger/helmfile/models/build/HelmfileBuild.java) and [HelmfileTemplate](https://github.com/paichinger/jhelmfile/blob/main/src/main/java/com/paichinger/helmfile/models/template/HelmfileTemplate.java)). Usage:
 ```java
 HelmfileTemplate templateOutput = runtime.template(templateCmmand);
