@@ -20,7 +20,7 @@ For example, you could run verifications against them, as you can see in the [ex
 implementation 'io.github.paichinger:jhelmfile:1.12'
 ```
 ## Commands
-For each supported helmfile command (`build` and `template`) you can find a builder. See here:
+For each supported helmfile command (`build`, `template` and `sync`) you can find a builder. See here:
 ### build
 The `build` command currently supports the following parameters:
 - `--environment`
