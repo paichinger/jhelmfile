@@ -1,10 +1,21 @@
 repositories:
   - name: prometheus-community
     url: https://prometheus-community.github.io/helm-charts
+environments:
+  default:
+    values:
+      - prometheusRbacCreate: true
+  testing:
+    values:
+      - prometheusRbacCreate: true
+  production:
+    values:
+      - prometheusRbacCreate: false
+---
 releases:
   - name: prom-norbac-ubuntu
     namespace: prometheus
     chart: prometheus-community/prometheus
     set:
       - name: rbac.create
-        value: false
+        value: {{ .Values.prometheusRbacCreate }}
