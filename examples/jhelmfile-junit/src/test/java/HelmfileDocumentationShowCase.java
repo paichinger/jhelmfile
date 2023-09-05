@@ -35,7 +35,4 @@ public class HelmfileDocumentationShowCase {
 		assertThat(productionResult.releases().get(0).set().get("rbac.create"), equalTo("false"));
 	}
 	
-	private static void verifyBuild(HelmfileBuild build) {
-		assertThat(build.releases().get(0).name(), equalTo("prom-norbac-ubuntu"));
-	}
 }
